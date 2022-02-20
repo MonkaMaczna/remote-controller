@@ -1,0 +1,7 @@
+name: Remote
+version: 1.0.0
+main: pl.fabrykacraft.remote.RemoteController
+author: Monka
+api-version: 1.18
+libraries:
+  - org.openjdk.nashorn:nashorn-core:15.3
