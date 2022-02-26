@@ -36,10 +36,10 @@ public class Model {
                 locationToMove.add(0, -1, 0);
                 break;
             case "left":
-                locationToMove.add(0,0, 1);
+                locationToMove.add(0,0, -1);
                 break;
             case "right":
-                locationToMove.add(0, 0, -1);
+                locationToMove.add(0, 0, 1);
                 break;
             case "forward":
                 locationToMove.add(1, 0, 0);

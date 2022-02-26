@@ -209,7 +209,7 @@
 
             }));
 
-            changeValue("z", "forward");
+            changeValue("z", "back");
         }
         function rightCLick() {
             assingValues();
@@ -225,7 +225,7 @@
 
             }));
 
-            changeValue("z", "back");
+            changeValue("z", "forward");
         }
         function breakBlockInFront() {
             assingValues();
@@ -235,7 +235,7 @@
             xhr.send(JSON.stringify({
                 "z": zValue,
                 "y": yValue,
-                "x": (xValue + 1),
+                "x": "" + (Number(xValue) + 1),
                 "world": worldValue
             }));
         }

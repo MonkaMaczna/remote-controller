@@ -70,6 +70,7 @@ public class Spark {
         });
 
 
+        // TODO Fix response with "material" and use it in index.html
         post("/post/move", (request, response) -> {
 
             try {
