@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Move your blocks</title>
+
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet"> 
+
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        .grid-1 {
+            display: grid;
+            gap: 5px;
+            grid-template-columns: repeat(3, 1fr);
+        }
+        .grid-2 {
+            display: grid;
+            gap: 0px;
+            
+        }
+        .footer {
+            position: absolute;
+            bottom: 0%;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <div class="w-auto py-7">
+            <h1 class="self-center text-center text-7xl">Move your blocks around!</h1>
+        </div>
+        <main>
+            <div>
+                <form class="grid-2">
+                    <input type="text" id="world" class="bg-zinc-300 p-1 m-1 rounded-lg" value="world" placeholder="World..." />
+                    <input type="text" id="x" class="bg-zinc-300 p-1 m-1 rounded-lg" placeholder="X Coordinate..." />
+                    <input type="text" id="y" class="bg-zinc-300 p-1 m-1 rounded-lg" placeholder="Y Coordinate..." />
+                    <input type="text" id="z" class="bg-zinc-300 p-1 m-1 mb-5 rounded-lg" placeholder="Z Coordinate..." />
+
+                </form>
+            </div>
+            <div class="grid-1 px-6">
+                <button id="left-top" class="inline-flex text-white bg-zinc-900 border-0 py-2 px-6 focus:outline-none hover:bg-zinc-500 rounded text-lg">
+                    UP
+                </button>
+                <button id="forward" class="inline-flex text-white bg-zinc-900 border-0 py-2 px-6 focus:outline-none hover:bg-zinc-500 rounded text-lg">
+                    FORWARD
+                </button>
+                <button id="right-top" class="inline-flex text-white bg-zinc-900 border-0 py-2 px-6 focus:outline-none hover:bg-zinc-500 rounded text-lg">
+                    DOWN
+                </button>
+                <button id="left" class="inline-flex text-white bg-zinc-900 border-0 py-2 px-6 focus:outline-none hover:bg-zinc-500 rounded text-lg">
+                    LEFT
+                </button>
+                <button id="center" class="inline-flex text-white bg-zinc-900 border-0 py-2 px-6 focus:outline-none hover:bg-zinc-500 rounded text-lg">
+                    DIG FRONT
+                </button>
+                <button id="right" class="inline-flex text-white bg-zinc-900 border-0 py-2 px-6 focus:outline-none hover:bg-zinc-500 rounded text-lg">
+                    RIGHT
+                </button>
+                <button id="left-bottom" class="inline-flex text-white bg-zinc-900 border-0 py-2 px-6 focus:outline-none hover:bg-zinc-500 rounded text-lg">
+                    UP
+                </button>
+                <button id="back" class="inline-flex text-white bg-zinc-900 border-0 py-2 px-6 focus:outline-none hover:bg-zinc-500 rounded text-lg">
+                    BACK
+                </button>
+                <button id="right-bottom" class="inline-flex text-white bg-zinc-900 border-0 py-2 px-6 focus:outline-none hover:bg-zinc-500 rounded text-lg">
+                    DOWN
+                </button>
+            </div>
+            <div class="m-7">
+                <label for="debug">Debug</label>
+                <input type="checkbox" id="debug"/>
+            </div>
+        </main>
+        <div class="footer text-center">
+            <h5>Plugin and website made by Wheat Flour!</h5>
+        </div>
+    </div>
+    <script>
+
+        
+        document.getElementById("left-top").addEventListener("click", upCLick);
+        document.getElementById("forward").addEventListener("click", forwardCLick);
+        document.getElementById("right-top").addEventListener("click", downCLick);
+        document.getElementById("left").addEventListener("click", leftCLick);
+        document.getElementById("center").addEventListener("click", breakBlockInFront);
+        document.getElementById("right").addEventListener("click", rightCLick);
+        document.getElementById("left-bottom").addEventListener("click", upCLick);
+        document.getElementById("back").addEventListener("click", backCLick);
+        document.getElementById("right-bottom").addEventListener("click", downCLick);
+
+        let debugValue = null;
+        let worldValue = document.getElementById("world").value;
+        let xValue = document.getElementById("x").value;
+        let yValue = document.getElementById("y").value;
+        let zValue = document.getElementById("z").value;
+
+
+        const postUrl = "/post/move";
+        const digUrl = "/post/break";
+
+        function changeValue(coordinate, direction) {
+            const originalValue = document.getElementById(coordinate).value;
+            const changedValue = Number(originalValue) + (direction === "forward" ? 1 : -1);
+            document.getElementById(coordinate).value = changedValue;
+        }
+
+        function assingValues() {
+            debugValue = document.getElementById("debug").value;
+            worldValue = document.getElementById("world").value;
+            xValue = document.getElementById("x").value;
+            yValue = document.getElementById("y").value;
+            zValue = document.getElementById("z").value;
+
+        }
+        
+        function forwardCLick() {
+
+            assingValues();
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", postUrl, true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.send(JSON.stringify({
+                "world": worldValue,
+                "x": xValue,
+                "y": yValue,
+                "z": zValue,
+                "direction": "forward"
+
+            }));
+
+            changeValue("x", "forward");
+
+        }
+
+
+
+
+        function backCLick() {
+            assingValues();
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", postUrl, true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.send(JSON.stringify({
+                "world": worldValue,
+                "x": xValue,
+                "y": yValue,
+                "z": zValue,
+                "direction": "back"
+
+            }));
+
+            changeValue("x", "back");
+        }
+        function upCLick() {
+            assingValues();
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", postUrl, true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.send(JSON.stringify({
+                "world": worldValue,
+                "x": xValue,
+                "y": yValue,
+                "z": zValue,
+                "direction": "up"
+
+            }));
+            changeValue("y", "forward");
+        }
+
+        function downCLick() {
+            assingValues();
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", postUrl, true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.send(JSON.stringify({
+                "world": worldValue,
+                "x": xValue,
+                "y": yValue,
+                "z": zValue,
+                "direction": "down"
+
+            }));
+            changeValue("y", "back");
+        }
+        function leftCLick() {
+            assingValues();
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", postUrl, true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.send(JSON.stringify({
+                "world": worldValue,
+                "x": xValue,
+                "y": yValue,
+                "z": zValue,
+                "direction": "left"
+
+            }));
+
+            changeValue("z", "forward");
+        }
+        function rightCLick() {
+            assingValues();
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", postUrl, true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.send(JSON.stringify({
+                "world": worldValue,
+                "x": xValue,
+                "y": yValue,
+                "z": zValue,
+                "direction": "right"
+
+            }));
+
+            changeValue("z", "back");
+        }
+        function breakBlockInFront() {
+            assingValues();
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", digUrl, true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.send(JSON.stringify({
+                "z": zValue,
+                "y": yValue,
+                "x": (xValue + 1),
+                "world": worldValue
+            }));
+        }
+        
+        
+    </script>
+</body>
+</html>

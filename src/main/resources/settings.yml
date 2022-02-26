@@ -1,0 +1,5 @@
+Port: 25567
+Prefix: "&b[Remote Controller] &a"
+Log_Lag_Over_Milis: 100
+Debug: []
+Version: 1
