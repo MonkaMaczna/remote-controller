@@ -1,4 +1,4 @@
-package pl.fabrykacraft.remote;
+package pl.fabrykacraft.remote.web;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,6 +41,19 @@ public class Spark {
         private String y;
         private String x;
         private String world;
+
+
+        public boolean isValid() {
+            return world != null && Valid.isDecimal(z) && Valid.isDecimal(y) && Valid.isDecimal(x);
+        }
+    }
+    @Data
+    static class LocationPayloadPlayer {
+        private String z;
+        private String y;
+        private String x;
+        private String world;
+        private String playerName;
 
 
         public boolean isValid() {
@@ -115,7 +128,7 @@ public class Spark {
         post("/post/break", (request, response) -> {
               try {
                   ObjectMapper mapper = new ObjectMapper();
-                  LocationPayload creation = mapper.readValue(request.body(), LocationPayload.class);
+                  LocationPayloadPlayer creation = mapper.readValue(request.body(), LocationPayloadPlayer.class);
 
 
                   if (!creation.getX().contains(".")) {
@@ -134,7 +147,7 @@ public class Spark {
                       return "";
                   }
                   Location location = new Location(Bukkit.getServer().getWorld(creation.getWorld()), Double.parseDouble(creation.getX()), Double.parseDouble(creation.getY()), Double.parseDouble(creation.getZ()));
-                  model.digBlock(location);
+                  model.digBlock(location, Bukkit.getPlayer(creation.getPlayerName()));
                   response.status(200);
                   response.type("application/json");
                   return true;

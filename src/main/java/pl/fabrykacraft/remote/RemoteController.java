@@ -1,19 +1,14 @@
 package pl.fabrykacraft.remote;
 
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import lombok.Data;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.plugin.SimplePlugin;
 import org.mineacademy.fo.settings.YamlStaticConfig;
+import pl.fabrykacraft.remote.commands.ClickingModeCommand;
+import pl.fabrykacraft.remote.events.ClickBlockEvent;
 import pl.fabrykacraft.remote.settings.Settings;
+import pl.fabrykacraft.remote.web.Spark;
 
 
 import java.util.Arrays;
@@ -29,6 +24,8 @@ public class RemoteController extends SimplePlugin {
     protected void onPluginStart() {
 
         Spark.initializeSpark();
+        registerEvents(new ClickBlockEvent());
+        registerCommand(new ClickingModeCommand("clicking"));
         Common.logFramed("&aController Loaded. \n&bGo to http://" + Bukkit.getIp() + ":" + Settings.PORT + "/ to remote control block!");
 
 

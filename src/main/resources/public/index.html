@@ -43,6 +43,7 @@
         <main>
             <div>
                 <form class="grid-2">
+                    <input type="text" id="player" class="bg-zinc-300 p-1 m-1 rounded-lg" value="world" placeholder="Player..." />
                     <input type="text" id="world" class="bg-zinc-300 p-1 m-1 rounded-lg" value="world" placeholder="World..." />
                     <input type="text" id="x" class="bg-zinc-300 p-1 m-1 rounded-lg" placeholder="X Coordinate..." />
                     <input type="text" id="y" class="bg-zinc-300 p-1 m-1 rounded-lg" placeholder="Y Coordinate..." />
@@ -52,30 +53,54 @@
             </div>
             <div class="grid-1 px-6">
                 <button id="left-top" class="inline-flex text-white bg-zinc-900 border-0 py-2 px-6 focus:outline-none hover:bg-zinc-500 rounded text-lg">
+                    <p id="left-top-material">
+                    </p>
+                    <br />
                     UP
                 </button>
                 <button id="forward" class="inline-flex text-white bg-zinc-900 border-0 py-2 px-6 focus:outline-none hover:bg-zinc-500 rounded text-lg">
+                    <p id="forward-material">
+                    </p>
+                    <br />
                     FORWARD
                 </button>
                 <button id="right-top" class="inline-flex text-white bg-zinc-900 border-0 py-2 px-6 focus:outline-none hover:bg-zinc-500 rounded text-lg">
+                    <p id="right-top-material">
+                    </p>
+                    <br />
                     DOWN
                 </button>
                 <button id="left" class="inline-flex text-white bg-zinc-900 border-0 py-2 px-6 focus:outline-none hover:bg-zinc-500 rounded text-lg">
+                    <p id="left-material">
+                    </p>
+                    <br />
                     LEFT
                 </button>
                 <button id="center" class="inline-flex text-white bg-zinc-900 border-0 py-2 px-6 focus:outline-none hover:bg-zinc-500 rounded text-lg">
+                    <p id="center-material">
+                    </p>
+                    <br />
                     DIG FRONT
                 </button>
                 <button id="right" class="inline-flex text-white bg-zinc-900 border-0 py-2 px-6 focus:outline-none hover:bg-zinc-500 rounded text-lg">
+                    <p id="right-material">
+                    </p>
+                    <br />
                     RIGHT
                 </button>
                 <button id="left-bottom" class="inline-flex text-white bg-zinc-900 border-0 py-2 px-6 focus:outline-none hover:bg-zinc-500 rounded text-lg">
+                    <p id="left-bottom-material">
+                    </p>
                     UP
                 </button>
                 <button id="back" class="inline-flex text-white bg-zinc-900 border-0 py-2 px-6 focus:outline-none hover:bg-zinc-500 rounded text-lg">
+                    <p id="back-material">
+                    </p>
                     BACK
                 </button>
                 <button id="right-bottom" class="inline-flex text-white bg-zinc-900 border-0 py-2 px-6 focus:outline-none hover:bg-zinc-500 rounded text-lg">
+                    <p id="right-bottom-material">
+                    </p>
                     DOWN
                 </button>
             </div>
@@ -90,6 +115,19 @@
     </div>
     <script>
 
+        let queryJson = queryStringToJSON(window.location.search.slice(1));
+
+        if (queryJson !== undefined) {
+            if (queryJson.x !== undefined && queryJson.y !== undefined && queryJson.z !== undefined && queryJson.world !== undefined && queryJson.player !== undefined) {
+                document.getElementById("x").value = queryJson.x;
+                document.getElementById("y").value = queryJson.y;
+                document.getElementById("z").value = queryJson.z;
+                document.getElementById("world").value = queryJson.world;
+                document.getElementById("player").value = queryJson.player;
+            }
+        }
+
+        
         
         document.getElementById("left-top").addEventListener("click", upCLick);
         document.getElementById("forward").addEventListener("click", forwardCLick);
@@ -106,6 +144,7 @@
         let xValue = document.getElementById("x").value;
         let yValue = document.getElementById("y").value;
         let zValue = document.getElementById("z").value;
+        let playerValue = document.getElementById("player").value;
 
 
         const postUrl = "/post/move";
@@ -123,6 +162,7 @@
             xValue = document.getElementById("x").value;
             yValue = document.getElementById("y").value;
             zValue = document.getElementById("z").value;
+            playerValue = document.getElementById("player").value;
 
         }
         
@@ -236,9 +276,34 @@
                 "z": zValue,
                 "y": yValue,
                 "x": "" + (Number(xValue) + 1),
-                "world": worldValue
+                "world": worldValue,
+                "playerName": playerValue
             }));
         }
+
+        function queryStringToJSON(qs) {
+            qs = qs || location.search.slice(1);
+
+            var pairs = qs.split('&');
+            var result = {};
+            pairs.forEach(function(p) {
+                var pair = p.split('=');
+                var key = pair[0];
+                var value = decodeURIComponent(pair[1] || '');
+
+                if( result[key] ) {
+                    if( Object.prototype.toString.call( result[key] ) === '[object Array]' ) {
+                        result[key].push( value );
+                    } else {
+                        result[key] = [ result[key], value ];
+                    }
+                } else {
+                    result[key] = value;
+                }
+            });
+
+            return JSON.parse(JSON.stringify(result));
+        };
         
         
     </script>

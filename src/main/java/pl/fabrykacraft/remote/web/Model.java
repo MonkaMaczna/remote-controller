@@ -1,10 +1,13 @@
-package pl.fabrykacraft.remote;
+package pl.fabrykacraft.remote.web;
 
 import lombok.Data;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.mineacademy.fo.Common;
+import org.mineacademy.fo.EntityUtil;
 import org.mineacademy.fo.jsonsimple.JSONObject;
 
 import java.util.HashMap;
@@ -52,18 +55,31 @@ public class Model {
             Material material = block.getType();
             block.setType(Material.AIR);
             locationToMove.getBlock().setType(material);
-            Common.log("Moved a block!");
+
 
 
 
         });
         return locationToMove;
     }
-    public Location digBlock(Location location) {
+    public Location digBlock(Location location, Player player) {
         Common.runLater(() -> {
-            Block block = location.getBlock();
-            if (!block.getType().isAir()) {
-                block.breakNaturally();
+            if (player == null) {
+                Block block = location.getBlock();
+                if (!block.getType().isAir()) {
+                    block.breakNaturally();
+                }
+            } else {
+
+
+                Block block = location.getBlock();
+                if (!block.getType().isAir()) {
+
+                    EntityUtil.dropItem(player.getLocation(), new ItemStack(block.getType(), 1), (item) -> {
+                        item.setCustomName("Dropped item");
+                    });
+                    block.setType(Material.AIR);
+                }
             }
         });
         return location;
